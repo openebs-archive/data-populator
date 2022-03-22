@@ -1,0 +1,96 @@
+# Create the OpenEBS data-population namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openebs-data-population
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: data-populator
+  namespace: openebs-data-population
+  labels:
+    openebs.io/name: data-populator
+    openebs.io/role: volume-populator
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: data-populator
+  labels:
+    openebs.io/name: data-populator
+    openebs.io/role: volume-populator
+rules:
+  - apiGroups: [""]
+    resources: [persistentvolumeclaims]
+    verbs: [get, create, delete]
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [get, create, delete]
+  - apiGroups: [""]
+    resources: [configmaps]
+    verbs: [get, create, delete]
+  - apiGroups: [""]
+    resources: [services]
+    verbs: [get, create, delete]
+
+  - apiGroups: ["storage.k8s.io"]
+    resources: [storageclasses]
+    verbs: [get]
+
+  - apiGroups: [openebs.io]
+    resources: [rsyncpopulators]
+    verbs: [get, delete, create]
+  - apiGroups: [openebs.io]
+    resources: [datapopulators]
+    verbs: [get, watch, list, update]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: data-populator
+  labels:
+    openebs.io/name: data-populator
+    openebs.io/role: volume-populator
+subjects:
+  - kind: ServiceAccount
+    name: data-populator
+    namespace: openebs-data-population
+roleRef:
+  kind: ClusterRole
+  name: data-populator
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: data-populator
+  namespace: openebs-data-population
+  labels:
+    openebs.io/app: data-populator
+    openebs.io/name: data-populator
+    openebs.io/role: volume-populator
+spec:
+  serviceName: data-populator
+  replicas: 1
+  selector:
+    matchLabels:
+      openebs.io/app: data-populator
+      openebs.io/name: data-populator
+      openebs.io/role: volume-populator
+  template:
+    metadata:
+      labels:
+        openebs.io/app: data-populator
+        openebs.io/name: data-populator
+        openebs.io/role: volume-populator
+    spec:
+      serviceAccount: data-populator
+      containers:
+        - name: data-populator
+          image: abhishek09dh/data-populator:v0.1
+          imagePullPolicy: Always
+          command:
+            - data-populator
+          args:
+            - --v=2

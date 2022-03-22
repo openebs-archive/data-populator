@@ -1,0 +1,63 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.5.0
+  creationTimestamp: null
+  name: rsyncpopulators.openebs.io
+spec:
+  group: openebs.io
+  names:
+    kind: RsyncPopulator
+    listKind: RsyncPopulatorList
+    plural: rsyncpopulators
+    singular: rsyncpopulator
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: RsyncPopulator is a volume populator that helps to create a volume from any rsync source.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RsyncPopulatorSpec contains the information of rsync daemon.
+            properties:
+              password:
+                description: Password is used as credential to access rsync daemon by the client.
+                type: string
+              path:
+                description: Path represent mount path of the volume which we want to sync by the client.
+                type: string
+              url:
+                description: URL is rsync daemon url it can be dns can be ip:port. Client will use it to connect and get the data from daemon.
+                type: string
+              username:
+                description: Username is used as credential to access rsync daemon by the client.
+                type: string
+            required:
+            - password
+            - path
+            - url
+            - username
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

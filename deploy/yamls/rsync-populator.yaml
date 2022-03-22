@@ -1,0 +1,95 @@
+# Create the OpenEBS data-population namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openebs-data-population
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rsync-populator
+  namespace: openebs-data-population
+  labels:
+    openebs.io/name: rsync-populator
+    openebs.io/role: volume-populator
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rsync-populator
+  labels:
+    openebs.io/name: rsync-populator
+    openebs.io/role: volume-populator
+rules:
+  - apiGroups: [""]
+    resources: [persistentvolumes]
+    verbs: [get, list, watch, patch]
+  - apiGroups: [""]
+    resources: [persistentvolumeclaims]
+    verbs: [get, list, watch, patch, create, delete]
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [get, list, watch, create, delete]
+  - apiGroups: [storage.k8s.io]
+    resources: [storageclasses]
+    verbs: [get, list, watch]
+
+  - apiGroups: [openebs.io]
+    resources: [rsyncpopulators]
+    verbs: [get, list, watch]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rsync-populator
+  labels:
+    demo.io/name: rsync-populator
+    demo.io/role: volume-populator
+subjects:
+  - kind: ServiceAccount
+    name: rsync-populator
+    namespace: openebs-data-population
+roleRef:
+  kind: ClusterRole
+  name: rsync-populator
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rsync-populator
+  namespace: openebs-data-population
+  labels:
+    openebs.io/app: rsync-populator
+    openebs.io/name: rsync-populator
+    openebs.io/role: volume-populator
+spec:
+  serviceName: rsync-populator
+  replicas: 1
+  selector:
+    matchLabels:
+      openebs.io/app: rsync-populator
+      openebs.io/name: rsync-populator
+      openebs.io/role: volume-populator
+  template:
+    metadata:
+      labels:
+        openebs.io/app: rsync-populator
+        openebs.io/name: rsync-populator
+        openebs.io/role: volume-populator
+    spec:
+      serviceAccount: rsync-populator
+      containers:
+        - name: rsync-populator
+          image: abhishek09dh/rsync-populator:v0.1
+          imagePullPolicy: Always
+          command:
+            - rsync-populator
+          args:
+            - --v=2
+            - --image-name=abhishek09dh/rsync-client:v0.1
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

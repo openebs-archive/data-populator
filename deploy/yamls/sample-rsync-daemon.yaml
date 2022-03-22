@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rsync-daemon
+  labels:
+    role: rsync-daemon
+    name: rsync-daemon
+spec:
+  containers:
+    - name: rsync-daemon
+      image: abhishek09dh/rsync-daemon:v0.1
+      env:
+        - name: RSYNC_USERNAME
+          value: user
+        - name: RSYNC_PASSWORD
+          value: pass
+      ports:
+        - containerPort: 873
+      volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: config
+          mountPath: /etc/rsyncd.conf
+          subPath: rsyncd.conf
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: sample-pvc
+    - name: config
+      configMap:
+        name: rsync-daemon.conf
+  restartPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rsync-daemon
+  labels:
+    role: rsync-daemon
+    name: rsync-daemon
+spec:
+  ports:
+    - port: 873
+      protocol: TCP
+  selector:
+    role: rsync-daemon
+    name: rsync-daemon
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rsync-daemon.conf
+data:
+  rsyncd.conf: |
+    # /etc/rsyncd.conf
+
+    # Minimal configuration file for rsync daemon
+    # See rsync(1) and rsyncd.conf(5) man pages for help
+
+    # This line is required by the /etc/init.d/rsyncd script
+    pid file = /var/run/rsyncd.pid
+
+    uid = 0
+    gid = 0
+    use chroot = yes
+    reverse lookup = no
+    [data]
+        hosts deny = *
+        hosts allow = 0.0.0.0/0
+        read only = false
+        path = /data
+        auth users = , user:rw
+        secrets file = /etc/rsyncd.secrets
+        timeout = 600
+        transfer logging = true
