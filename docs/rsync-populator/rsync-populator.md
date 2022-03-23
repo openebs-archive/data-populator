@@ -16,26 +16,26 @@ The following things are required to use data populators:
 
 ## Steps to use Rsync Populator
 
-1. Install data populator CRD
+1. Install rsync populator CRD
 
     ```console
-    kubectl apply -f https://raw.githubusercontent.com/Ab-hishek/data-populator/master/deploy/crds/openebs.io_rsyncpopulators.yaml
+    kubectl apply -f https://raw.githubusercontent.com/openebs/data-populator/master/deploy/crds/rsyncpopulator-crd.yaml
     ```
 
-2.  Install data populator controller
+2.  Install rsync populator controller
     ```console
-    kubectl apply -f https://raw.githubusercontent.com/Ab-hishek/data-populator/master/deploy/yamls/rsync-populator.yaml
+    kubectl apply -f https://raw.githubusercontent.com/openebs/data-populator/master/deploy/yamls/rsync-populator.yaml
     ```
     **NOTE:** `openebs-data-population` namespace is reserved for populator and no pvc with `dataSourceRef` should be created in this namespace as the controller ignores PVCs in its own working namespace.
   
-3. Preparing a volume which will act as the source for data populator.
+3. Preparing a volume which will act as the source for rsync populator.
     - Create a sample pvc. Please feel free to edit the storageclass as per your need.
         ```console
-        kubectl apply -f https://raw.githubusercontent.com/Ab-hishek/data-populator/master/deploy/yamls/sample-pvc.yaml
+        kubectl apply -f https://raw.githubusercontent.com/openebs/data-populator/master/deploy/yamls/sample-pvc.yaml
        ```  
     - Create an application to consume the above volume
         ```console
-        kubectl apply -f https://raw.githubusercontent.com/Ab-hishek/data-populator/master/deploy/yamls/sample-app.yaml
+        kubectl apply -f https://raw.githubusercontent.com/openebs/data-populator/master/deploy/yamls/sample-app.yaml
         ```
     - Write some data into the volume
         ```console
@@ -56,7 +56,7 @@ The following things are required to use data populators:
 
 5. Bring up a rsync source and attach the above volume to it.
     ```console
-   kubectl apply -f https://raw.githubusercontent.com/Ab-hishek/data-populator/master/deploy/yamls/sample-rsync-daemon.yaml
+   kubectl apply -f https://raw.githubusercontent.com/openebs/data-populator/master/deploy/yamls/sample-rsync-daemon.yaml
    ```
    
 6. Create an instance of the RsyncPopulator CR, with all the rsync source details
@@ -66,9 +66,23 @@ The following things are required to use data populators:
     metadata:
       name: rsync-populator
     spec:
+      # rsync daemon credential used by rsync client to
+      # connect to it
       username: user
+    
+      # password allows you to run authenticated rsync
+      # connections to an rsync daemon without user intervention
       password: pass
+    
+      # rsync clinet needs to contact a remote server
+      # runnning a rsync daemon. Client will be use this
+      # to connect and get data from daemon.
+      # url can be a dns or ip:port.
       url: rsync-daemon.default:873
+    
+      # source data path on the rsync daemon(remote server) 
+      # from which the client will sync data into the
+      # destination volume
       path: /data
    ```
    

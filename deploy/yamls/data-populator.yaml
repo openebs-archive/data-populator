@@ -1,3 +1,6 @@
+
+---
+
 # Create the OpenEBS data-population namespace
 apiVersion: v1
 kind: Namespace
