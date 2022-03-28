@@ -24,6 +24,7 @@ chmod 600 /etc/rsyncd.secrets
 
 # Check and run if any script is available at /entrypoint.d path.
 for f in /entrypoint.d/*; do
+  # shellcheck disable=SC1090
   case "$f" in
     *.sh)  echo "$0: running $f"; . "$f" ;;
     *)     echo "$0: ignoring $f" ;;
