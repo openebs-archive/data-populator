@@ -20,7 +20,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	internalv1alpha1 "github.com/Ab-hishek/data-populator/apis/openebs.io/v1alpha1"
+	internalv1alpha1 "github.com/openebs/data-populator/apis/openebs.io/v1alpha1"
 )
 
 type templateConfig struct {

@@ -25,7 +25,7 @@ import (
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/klog/v2"
 
-	"github.com/Ab-hishek/data-populator/app/populator/data/controller"
+	"github.com/openebs/data-populator/app/populator/data/controller"
 )
 
 func main() {
