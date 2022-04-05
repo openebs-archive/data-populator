@@ -74,37 +74,38 @@ jobs:
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v1
 
-  bdd-test:
-    needs: ['unit-test']
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        kubernetes: [v1.22.1]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up Go 1.16
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.16.5
-
-      - name: Setup Minikube-Kubernetes
-        uses: manusa/actions-setup-minikube@v2.3.0
-        with:
-          minikube version: v1.16.0
-          kubernetes version: ${{ matrix.kubernetes }}
-          github token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build images locally
-        run: make lvm-driver-image || exit 1;
-
-      - name: bootstrap
-        run: make bootstrap
-
-      - name: Running tests
-        run: ./ci/ci-test.sh
+# TODO Add below bdd-test action once bdd tests are ready
+#  bdd-test:
+#    needs: ['unit-test']
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: true
+#      matrix:
+#        kubernetes: [v1.22.1]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#
+#      - name: Set up Go 1.16
+#        uses: actions/setup-go@v2
+#        with:
+#          go-version: 1.16.5
+#
+#      - name: Setup Minikube-Kubernetes
+#        uses: manusa/actions-setup-minikube@v2.3.0
+#        with:
+#          minikube version: v1.16.0
+#          kubernetes version: ${{ matrix.kubernetes }}
+#          github token: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Build images locally
+#        run: make lvm-driver-image || exit 1;
+#
+#      - name: bootstrap
+#        run: make bootstrap
+#
+#      - name: Running tests
+#        run: ./ci/ci-test.sh
 
   data-populator:
     runs-on: ubuntu-latest
