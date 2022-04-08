@@ -119,46 +119,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Image Org
-        # sets the default IMAGE_ORG to openebs
-        run: |
-          [ -z "${{ secrets.IMAGE_ORG }}" ] && IMAGE_ORG=openebs || IMAGE_ORG=${{ secrets.IMAGE_ORG }}
-          echo "IMAGE_ORG=${IMAGE_ORG}" >> $GITHUB_ENV
-
-      - name: Set Build Date
-        id: date
-        run: |
-          echo "::set-output name=DATE::$(date -u +'%Y-%m-%dT%H:%M:%S%Z')"
-
-      - name: Set Tag
-        run: |
-          BRANCH="${GITHUB_REF##*/}"
-          CI_TAG=${BRANCH#v}-ci
-          if [ ${BRANCH} = "develop" ]; then
-            CI_TAG="ci"
-          fi
-          echo "TAG=${CI_TAG}" >> $GITHUB_ENV
-          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
-
-      - name: Docker meta
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
-        with:
-          # add each registry to which the image needs to be pushed here
-          images: |
-            ${{ env.IMAGE_ORG }}/data-populator
-            quay.io/${{ env.IMAGE_ORG }}/data-populator
-            ghcr.io/${{ env.IMAGE_ORG }}/data-populator
-          tag-latest: false
-          tag-custom-only: true
-          tag-custom: |
-            ${{ env.TAG }}
-
-      - name: Print Tag info
-        run: |
-          echo "BRANCH: ${BRANCH}"
-          echo "${{ steps.docker_meta.outputs.tags }}"
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -170,27 +130,7 @@ jobs:
         with:
           version: v0.5.1
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
-      - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push Image
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -198,12 +138,7 @@ jobs:
           push: true
           platforms: linux/amd64, linux/arm64
           tags: |
-            ${{ steps.docker_meta.outputs.tags }}
-          build-args: |
-            DBUILD_DATE=${{ steps.date.outputs.DATE }}
-            DBUILD_REPO_URL=https://github.com/openebs/data-populator
-            DBUILD_SITE_URL=https://openebs.io
-            BRANCH=${{ env.BRANCH }}
+            openebs/data-populator:ci
 
   rsync-populator:
     runs-on: ubuntu-latest
@@ -212,46 +147,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Image Org
-        # sets the default IMAGE_ORG to openebs
-        run: |
-          [ -z "${{ secrets.IMAGE_ORG }}" ] && IMAGE_ORG=openebs || IMAGE_ORG=${{ secrets.IMAGE_ORG }}
-          echo "IMAGE_ORG=${IMAGE_ORG}" >> $GITHUB_ENV
-
-      - name: Set Build Date
-        id: date
-        run: |
-          echo "::set-output name=DATE::$(date -u +'%Y-%m-%dT%H:%M:%S%Z')"
-
-      - name: Set Tag
-        run: |
-          BRANCH="${GITHUB_REF##*/}"
-          CI_TAG=${BRANCH#v}-ci
-          if [ ${BRANCH} = "develop" ]; then
-            CI_TAG="ci"
-          fi
-          echo "TAG=${CI_TAG}" >> $GITHUB_ENV
-          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
-
-      - name: Docker meta
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
-        with:
-          # add each registry to which the image needs to be pushed here
-          images: |
-            ${{ env.IMAGE_ORG }}/rsync-populator
-            quay.io/${{ env.IMAGE_ORG }}/rsync-populator
-            ghcr.io/${{ env.IMAGE_ORG }}/rsync-populator
-          tag-latest: false
-          tag-custom-only: true
-          tag-custom: |
-            ${{ env.TAG }}
-
-      - name: Print Tag info
-        run: |
-          echo "BRANCH: ${BRANCH}"
-          echo "${{ steps.docker_meta.outputs.tags }}"
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -263,27 +158,7 @@ jobs:
         with:
           version: v0.5.1
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
-      - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push Image
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -291,12 +166,7 @@ jobs:
           push: true
           platforms: linux/amd64, linux/arm64
           tags: |
-            ${{ steps.docker_meta.outputs.tags }}
-          build-args: |
-            DBUILD_DATE=${{ steps.date.outputs.DATE }}
-            DBUILD_REPO_URL=https://github.com/openebs/data-populator
-            DBUILD_SITE_URL=https://openebs.io
-            BRANCH=${{ env.BRANCH }}
+            openebs/rsync-populator:ci
 
   rsync-daemon:
     runs-on: ubuntu-latest
@@ -305,46 +175,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Image Org
-        # sets the default IMAGE_ORG to openebs
-        run: |
-          [ -z "${{ secrets.IMAGE_ORG }}" ] && IMAGE_ORG=openebs || IMAGE_ORG=${{ secrets.IMAGE_ORG }}
-          echo "IMAGE_ORG=${IMAGE_ORG}" >> $GITHUB_ENV
-
-      - name: Set Build Date
-        id: date
-        run: |
-          echo "::set-output name=DATE::$(date -u +'%Y-%m-%dT%H:%M:%S%Z')"
-
-      - name: Set Tag
-        run: |
-          BRANCH="${GITHUB_REF##*/}"
-          CI_TAG=${BRANCH#v}-ci
-          if [ ${BRANCH} = "develop" ]; then
-            CI_TAG="ci"
-          fi
-          echo "TAG=${CI_TAG}" >> $GITHUB_ENV
-          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
-
-      - name: Docker meta
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
-        with:
-          # add each registry to which the image needs to be pushed here
-          images: |
-            ${{ env.IMAGE_ORG }}/rsync-daemon
-            quay.io/${{ env.IMAGE_ORG }}/rsync-daemon
-            ghcr.io/${{ env.IMAGE_ORG }}/rsync-daemon
-          tag-latest: false
-          tag-custom-only: true
-          tag-custom: |
-            ${{ env.TAG }}
-
-      - name: Print Tag info
-        run: |
-          echo "BRANCH: ${BRANCH}"
-          echo "${{ steps.docker_meta.outputs.tags }}"
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -356,27 +186,7 @@ jobs:
         with:
           version: v0.5.1
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
-      - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push Image
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -384,12 +194,7 @@ jobs:
           push: true
           platforms: linux/amd64, linux/arm64
           tags: |
-            ${{ steps.docker_meta.outputs.tags }}
-          build-args: |
-            DBUILD_DATE=${{ steps.date.outputs.DATE }}
-            DBUILD_REPO_URL=https://github.com/openebs/data-populator
-            DBUILD_SITE_URL=https://openebs.io
-            BRANCH=${{ env.BRANCH }}
+            openebs/rsync-daemon:ci
 
   rsync-client:
     runs-on: ubuntu-latest
@@ -398,46 +203,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set Image Org
-        # sets the default IMAGE_ORG to openebs
-        run: |
-          [ -z "${{ secrets.IMAGE_ORG }}" ] && IMAGE_ORG=openebs || IMAGE_ORG=${{ secrets.IMAGE_ORG }}
-          echo "IMAGE_ORG=${IMAGE_ORG}" >> $GITHUB_ENV
-
-      - name: Set Build Date
-        id: date
-        run: |
-          echo "::set-output name=DATE::$(date -u +'%Y-%m-%dT%H:%M:%S%Z')"
-
-      - name: Set Tag
-        run: |
-          BRANCH="${GITHUB_REF##*/}"
-          CI_TAG=${BRANCH#v}-ci
-          if [ ${BRANCH} = "develop" ]; then
-            CI_TAG="ci"
-          fi
-          echo "TAG=${CI_TAG}" >> $GITHUB_ENV
-          echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
-
-      - name: Docker meta
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
-        with:
-          # add each registry to which the image needs to be pushed here
-          images: |
-            ${{ env.IMAGE_ORG }}/rsync-client
-            quay.io/${{ env.IMAGE_ORG }}/rsync-client
-            ghcr.io/${{ env.IMAGE_ORG }}/rsync-client
-          tag-latest: false
-          tag-custom-only: true
-          tag-custom: |
-            ${{ env.TAG }}
-
-      - name: Print Tag info
-        run: |
-          echo "BRANCH: ${BRANCH}"
-          echo "${{ steps.docker_meta.outputs.tags }}"
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -449,27 +214,7 @@ jobs:
         with:
           version: v0.5.1
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
-      - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push Image
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -477,9 +222,4 @@ jobs:
           push: true
           platforms: linux/amd64, linux/arm64
           tags: |
-            ${{ steps.docker_meta.outputs.tags }}
-          build-args: |
-            DBUILD_DATE=${{ steps.date.outputs.DATE }}
-            DBUILD_REPO_URL=https://github.com/openebs/data-populator
-            DBUILD_SITE_URL=https://openebs.io
-            BRANCH=${{ env.BRANCH }}
+            openebs/rsync-client:ci
