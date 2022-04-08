@@ -45,7 +45,7 @@ RUN make rsync-populator
 FROM alpine:3.12
 
 RUN apk add --no-cache bash
-RUN apk add --no-cache vim=8.2.4173-r0
+RUN apk add --no-cache vim=8.2.4619-r0
 
 ARG DBUILD_DATE
 ARG DBUILD_REPO_URL

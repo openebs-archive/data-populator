@@ -352,12 +352,13 @@ spec:
       serviceAccount: data-populator
       containers:
         - name: data-populator
-          image: abhishek09dh/data-populator:v0.1
+          image: openebs/data-populator:ci
           imagePullPolicy: Always
           command:
             - data-populator
           args:
             - --v=2
+            - --image-name=openebs/rsync-daemon:ci
 
 ---
 
@@ -444,13 +445,13 @@ spec:
       serviceAccount: rsync-populator
       containers:
         - name: rsync-populator
-          image: abhishek09dh/rsync-populator:v0.1
+          image: openebs/rsync-populator:ci
           imagePullPolicy: Always
           command:
             - rsync-populator
           args:
             - --v=2
-            - --image-name=abhishek09dh/rsync-client:v0.1
+            - --image-name=openebs/rsync-client:ci
           env:
             - name: POD_NAMESPACE
               valueFrom:

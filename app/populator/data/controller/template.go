@@ -23,6 +23,10 @@ import (
 	internalv1alpha1 "github.com/openebs/data-populator/apis/openebs.io/v1alpha1"
 )
 
+var (
+	RsyncServerImage string
+)
+
 type templateConfig struct {
 	sourcePVCName      string
 	sourcePVCNamespace string
@@ -37,7 +41,7 @@ func templateFromDataPopulator(cr internalv1alpha1.DataPopulator) (*templateConf
 		sourcePVCName:      cr.Spec.SourcePVC,
 		sourcePVCNamespace: cr.Spec.SourcePVCNamespace,
 		destinationPVCSpec: cr.Spec.DestinationPVC,
-		imageName:          rsyncServerImage,
+		imageName:          RsyncServerImage,
 		rsyncUsername:      rsyncUsername,
 		rsyncPassword:      rsyncPassword,
 	}

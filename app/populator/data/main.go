@@ -30,6 +30,9 @@ import (
 
 func main() {
 	klog.InitFlags(nil)
+
+	flag.StringVar(&controller.RsyncServerImage, "image-name", "", "Rsync server image to use as data source")
+
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"),

@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: rsync-daemon
-      image: abhishek09dh/rsync-daemon:v0.1
+      image: openebs/rsync-daemon:ci
       env:
         - name: RSYNC_USERNAME
           value: user
