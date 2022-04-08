@@ -1,4 +1,4 @@
-module github.com/Ab-hishek/data-populator
+module github.com/openebs/data-populator
 
 go 1.16
 

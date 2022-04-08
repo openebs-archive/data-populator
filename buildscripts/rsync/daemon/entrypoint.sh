@@ -17,8 +17,8 @@ set -e
 
 # Use the environment variables for rsync username and password.
 # If not provided, the default values will be used
-RSYNC_USERNAME=${RSYNC_USERNAME:-user}
-RSYNC_PASSWORD=${RSYNC_PASSWORD:-pass}
+RSYNC_USERNAME=${RSYNC_USERNAME:-openebs-user}
+RSYNC_PASSWORD=${RSYNC_PASSWORD:-openebs-pass}
 echo "$RSYNC_USERNAME:$RSYNC_PASSWORD" >  /etc/rsyncd.secrets
 chmod 600 /etc/rsyncd.secrets
 

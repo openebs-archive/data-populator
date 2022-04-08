@@ -91,9 +91,10 @@ spec:
       serviceAccount: data-populator
       containers:
         - name: data-populator
-          image: abhishek09dh/data-populator:v0.1
+          image: openebs/data-populator:ci
           imagePullPolicy: Always
           command:
             - data-populator
           args:
             - --v=2
+            - --image-name=openebs/rsync-daemon:ci

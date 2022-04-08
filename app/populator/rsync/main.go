@@ -26,7 +26,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/klog"
 
-	internalv1alpha1 "github.com/Ab-hishek/data-populator/apis/openebs.io/v1alpha1"
+	internalv1alpha1 "github.com/openebs/data-populator/apis/openebs.io/v1alpha1"
 )
 
 const (

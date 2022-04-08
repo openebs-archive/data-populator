@@ -149,6 +149,15 @@ test: format
 vendor: go.mod go.sum deps
 	@go mod vendor
 
+# Bootstrap downloads tools required
+# during build
+.PHONY: bootstrap
+bootstrap: controller-gen install-golangci-lint
+	@for tool in  $(EXTERNAL_TOOLS) ; do \
+		echo "+ Installing $$tool" ; \
+		cd && GO111MODULE=on go get $$tool; \
+	done
+
 manifests:
 	@echo "--------------------------------"
 	@echo "+ Generating data populator crds"

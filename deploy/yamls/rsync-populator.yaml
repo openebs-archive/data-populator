@@ -84,13 +84,13 @@ spec:
       serviceAccount: rsync-populator
       containers:
         - name: rsync-populator
-          image: abhishek09dh/rsync-populator:v0.1
+          image: openebs/rsync-populator:ci
           imagePullPolicy: Always
           command:
             - rsync-populator
           args:
             - --v=2
-            - --image-name=abhishek09dh/rsync-client:v0.1
+            - --image-name=openebs/rsync-client:ci
           env:
             - name: POD_NAMESPACE
               valueFrom:

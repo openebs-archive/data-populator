@@ -25,11 +25,14 @@ import (
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/klog/v2"
 
-	"github.com/Ab-hishek/data-populator/app/populator/data/controller"
+	"github.com/openebs/data-populator/app/populator/data/controller"
 )
 
 func main() {
 	klog.InitFlags(nil)
+
+	flag.StringVar(&controller.RsyncServerImage, "image-name", "", "Rsync server image to use as data source")
+
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"),
