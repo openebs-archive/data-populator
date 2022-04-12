@@ -314,7 +314,6 @@ jobs:
           # add each registry to which the image needs to be pushed here
           images: |
             ${{ env.IMAGE_ORG }}/rsync-daemon
-            quay.io/${{ env.IMAGE_ORG }}/rsync-daemon
             ghcr.io/${{ env.IMAGE_ORG }}/rsync-daemon
           tag-latest: false
           tag-custom-only: true
