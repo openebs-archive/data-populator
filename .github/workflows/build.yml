@@ -144,7 +144,6 @@ jobs:
           # add each registry to which the image needs to be pushed here
           images: |
             ${{ env.IMAGE_ORG }}/data-populator
-            quay.io/${{ env.IMAGE_ORG }}/data-populator
             ghcr.io/${{ env.IMAGE_ORG }}/data-populator
           tag-latest: false
           tag-custom-only: true
@@ -172,13 +171,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Login to GHCR
         uses: docker/login-action@v1
@@ -237,7 +229,6 @@ jobs:
           # add each registry to which the image needs to be pushed here
           images: |
             ${{ env.IMAGE_ORG }}/rsync-populator
-            quay.io/${{ env.IMAGE_ORG }}/rsync-populator
             ghcr.io/${{ env.IMAGE_ORG }}/rsync-populator
           tag-latest: false
           tag-custom-only: true
@@ -265,13 +256,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Login to GHCR
         uses: docker/login-action@v1
@@ -359,13 +343,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-
       - name: Login to GHCR
         uses: docker/login-action@v1
         with:
@@ -423,7 +400,6 @@ jobs:
           # add each registry to which the image needs to be pushed here
           images: |
             ${{ env.IMAGE_ORG }}/rsync-client
-            quay.io/${{ env.IMAGE_ORG }}/rsync-client
             ghcr.io/${{ env.IMAGE_ORG }}/rsync-client
           tag-latest: false
           tag-custom-only: true
@@ -451,13 +427,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Login to GHCR
         uses: docker/login-action@v1
