@@ -23,7 +23,7 @@ Data populator can be used in the following scenarios:
 
 Before installing data-populator make sure your kubernetes cluster meets the following requirements:
 
-1. Kubernetes version 1.22 or above
+1. Kubernetes version 1.23 or above
 2. `AnyVolumeDataSource` feature gate is enabled on the cluster
 
 ### Install

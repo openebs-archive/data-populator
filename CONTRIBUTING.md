@@ -1,6 +1,15 @@
+# Contributing Guidelines
+<BR>
+
+## Umbrella Project
+OpenEBS is an "umbrella project". Every project, repository and file in the OpenEBS organization adopts and follows the policies found in the Community repo umbrella project files.
+<BR>
+
+This project follows the [OpenEBS Contributor Guidelines](https://github.com/openebs/community/CONTRIBUTING.md)
+
 # Contributing to data-populator
 
-LVM LocalPV uses the standard GitHub pull requests process to review and accept contributions.  There are several areas that could use your help. For starters, you could help in improving the sections in this document by either creating a new issue describing the improvement or submitting a pull request to this repository. The issues are maintained at [data-populator/issues](https://github.com/openebs/data-populator/issues) repository.
+Data Populator uses the standard GitHub pull requests process to review and accept contributions.  There are several areas that could use your help. For starters, you could help in improving the sections in this document by either creating a new issue describing the improvement or submitting a pull request to this repository. The issues are maintained at [data-populator/issues](https://github.com/openebs/data-populator/issues) repository.
 
 * If you are a first-time contributor, please see [Steps to Contribute](#steps-to-contribute).
 * If you have documentation improvement ideas, go ahead and create a pull request. See [Pull Request checklist](#pull-request-checklist)
